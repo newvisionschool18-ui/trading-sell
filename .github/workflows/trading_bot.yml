@@ -1,0 +1,30 @@
+name: Trading Alert Bot
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *"
+
+jobs:
+  trading-bot:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download bot code
+        uses: actions/checkout@v7
+
+      - name: Install Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install required packages
+        run: |
+          pip install yfinance pandas numpy requests
+
+      - name: Run trading bot
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+        run: |
+          python bot.py
